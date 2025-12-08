@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RFP {
+  id              String   @id @default(uuid())
+  title           String
+  description     String   @db.Text
+  budget          Float
+  deadline        DateTime
+  requirements    Json
+  paymentTerms    String?
+  warrantyPeriod  String?
+  status          String   @default("draft") // draft, sent, closed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  rfpVendors      RFPVendor[]
+  proposals       Proposal[]
+
+  @@map("rfps")
+}
+
+model Vendor {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  category    String?
+  contactPerson String?
+  phone       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rfpVendors  RFPVendor[]
+  proposals   Proposal[]
+
+  @@map("vendors")
+}
+
+model RFPVendor {
+  id          String   @id @default(uuid())
+  rfpId       String
+  vendorId    String
+  sentAt      DateTime @default(now())
+  emailStatus String   @default("sent") // sent, opened, responded
+
+  rfp         RFP      @relation(fields: [rfpId], references: [id], onDelete: Cascade)
+  vendor      Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([rfpId, vendorId])
+  @@map("rfp_vendors")
+}
+
+model Proposal {
+  id              String   @id @default(uuid())
+  rfpId           String
+  vendorId        String
+  rawEmailContent String   @db.Text
+  parsedData      Json
+  totalPrice      Float?
+  deliveryTime    String?
+  terms           String?  @db.Text
+  score           Float?
+  aiSummary       String?  @db.Text
+  aiRecommendation String? @db.Text
+  status          String   @default("received") // received, reviewed, accepted, rejected
+  receivedAt      DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  rfp             RFP      @relation(fields: [rfpId], references: [id], onDelete: Cascade)
+  vendor          Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@map("proposals")
+}
