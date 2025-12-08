@@ -10,6 +10,7 @@ const { startEmailPolling } = require('./services/emailReceiver');
 const rfpRoutes = require('./routes/rfpRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
 const proposalRoutes = require('./routes/proposalRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,7 @@ app.get('/', (req, res) => {
 app.use('/api/rfps', rfpRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/proposals', proposalRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

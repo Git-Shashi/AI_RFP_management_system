@@ -1,10 +1,11 @@
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { FileText, Users, CheckSquare, LayoutDashboard } from 'lucide-react';
+import { FileText, Users, CheckSquare, LayoutDashboard, BarChart3 } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import RFPsPage from './pages/RFPsPage';
 import VendorsPage from './pages/VendorsPage';
 import ProposalsPage from './pages/ProposalsPage';
 import RFPDetailPage from './pages/RFPDetailPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 
 function App() {
   const location = useLocation();
@@ -14,6 +15,7 @@ function App() {
     { path: '/rfps', icon: FileText, label: 'RFPs' },
     { path: '/vendors', icon: Users, label: 'Vendors' },
     { path: '/proposals', icon: CheckSquare, label: 'Proposals' },
+    { path: '/analytics', icon: BarChart3, label: 'Analytics' },
   ];
 
   return (
@@ -57,6 +59,7 @@ function App() {
             <Route path="/rfps/:id" element={<RFPDetailPage />} />
             <Route path="/vendors" element={<VendorsPage />} />
             <Route path="/proposals" element={<ProposalsPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
           </Routes>
         </div>
       </main>
